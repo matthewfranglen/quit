@@ -1,0 +1,48 @@
+# Turns the /proc/self link into the /proc/[NUMBER] link
+# Also starts using reply, which will be the eventual return value
+expand_link () {
+    reply=${REPLY:A}
+}
+
+# Checks to see if the process is the vim process.
+# The matching would be better done using exe, which is a link
+# to the actual command file, but that is difficult to dereference.
+is_vim () {
+    [[ "$(cat $reply/cmdline)" =~ "^(/bin/)?vim" ]]
+    # ${reply}/exe is frequently impossible to dereference
+    # [ ${reply}/exe(:A) = "/bin/vim" ]
+}
+
+# Checks to see if the process is the init process.
+# If you get to the init process then the search has failed.
+is_init () {
+    [ ${reply:t} -eq 1 ]
+    # [ ${reply}/exe(:A) = "/sbin/init" ]
+}
+
+# Look up /proc/[number]/stat in man 5 proc
+get_parent () {
+    reply=/proc/$(cat ${reply}/stat | cut -d' ' -f4)
+}
+
+# This is the recursive function.
+# This stops if the vim process is found, or if the init process has been reached.
+# Otherwise it checks the parent of the current process.
+rc_get_vim_process() {
+    if is_vim
+    then
+        return 0
+    elif is_init
+    then
+        return 1
+    fi
+
+    get_parent
+    rc_get_vim_process
+}
+
+# Expands the /proc/self link and then searches for the vim parent
+get_vim_process () {
+    expand_link
+    rc_get_vim_process
+}
