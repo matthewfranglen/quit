@@ -15,14 +15,14 @@ command_name () {
     # This actually has a terrible time with the shells started by tmux.
     # When tmux starts my zsh, the command name is -zsh.
     # It seems to be impossible to suppress the error for the inability to expand -zsh using =
-    echo =${(s/\0/)$(cat $reply/cmdline)[1]}
+    echo =${(s/\0/)$(cat $reply/cmdline)[1]}(:A)
 }
 
 # Checks to see if the process is the vim process.
 # The matching would be better done using exe, which is a link
 # to the actual command file, but that is difficult to dereference.
 is_vim () {
-    [[ $(command_name) = $VIM_EXE ]]
+    [ "$(command_name)" = $VIM_EXE ]
     # ${reply}/exe is frequently impossible to dereference
     # [ ${reply}/exe(:A) = $VIM_EXE ]
 }
