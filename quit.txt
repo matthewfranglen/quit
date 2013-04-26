@@ -9,6 +9,7 @@ expand_link () {
 # This will take the first part of the cmdline file which will
 # be the command in question. The use of sudo is not reflected
 # in this file.
+# The cmdline file is separated by null characters.
 # See: http://stackoverflow.com/questions/1585989/how-to-parse-proc-pid-cmdline
 command_name () {
     # This actually has a terrible time with the shells started by tmux.
@@ -29,7 +30,7 @@ is_vim () {
 # Checks to see if the process is the init process.
 # If you get to the init process then the search has failed.
 is_init () {
-    [ ${reply:t} -eq 1 ]
+    [ ${reply:t} -eq 1 ] # Init is process id 1
     # [ ${reply}/exe(:A) = "/sbin/init" ]
 }
 
