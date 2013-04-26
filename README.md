@@ -53,6 +53,8 @@ It should produce something like /bin/zsh.
 
 The approach can be summed up using this little flowchart:
 
+![Check out the project if you can't see this image](flow.png)
+
 It is quite a basic approach, searching all parents till the Vim or Init processes are found. Finding Vim represents success, as it is that process that we want to kill. If we hit Init then we have failed - the Init process is the parent of all processes, so reaching that means we have missed our target.
 
 ## ZSH Expansion and Custom Matchers
