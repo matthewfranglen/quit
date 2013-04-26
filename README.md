@@ -10,7 +10,8 @@ This is stupid. This is a really bad idea. This will forcibly kill Vim and you m
 ZSH pattern expansion allows you to define a custom matcher. This custom matcher can test potential matches and indicate if they should be returned. It is also possible for the custom matcher to alter the match before returning it, including returning more than one match from a single potential match. This can be used to do useful things like traversing zip files or returning files based on mime type, but here we will be returning a single value which will represent the Vim process.
 
 ZSH pattern expansion is best done on files and folders, and it happens that there is a filesystem that represents processes. Using this filesystem it is possible to locate a folder which clearly indicates the Vim process id. In this way ZSH pattern expansion can identify the process that needs to be killed to exit Vim.
-The /proc filesystem
+
+## The /proc filesystem
 
 This will use the /proc virtual filesystem to search from the current process up the process tree until it finds the Vim process. The /proc folder contains a folder for each running process on the system. The content of the folder contains several different files which provide information about the process in question. Here are some of the more interesting ones:
 
