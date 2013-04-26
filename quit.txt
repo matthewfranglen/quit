@@ -1,16 +1,29 @@
+VIM_EXE=${${:-=vim}:A}
+
 # Turns the /proc/self link into the /proc/[NUMBER] link
 # Also starts using reply, which will be the eventual return value
 expand_link () {
     reply=${REPLY:A}
 }
 
+# This will take the first part of the cmdline file which will
+# be the command in question. The use of sudo is not reflected
+# in this file.
+# See: http://stackoverflow.com/questions/1585989/how-to-parse-proc-pid-cmdline
+command_name () {
+    # This actually has a terrible time with the shells started by tmux.
+    # When tmux starts my zsh, the command name is -zsh.
+    # It seems to be impossible to suppress the error for the inability to expand -zsh using =
+    echo =$(cat $reply/cmdline | strings -1 | head -n1)(:A)
+}
+
 # Checks to see if the process is the vim process.
 # The matching would be better done using exe, which is a link
 # to the actual command file, but that is difficult to dereference.
 is_vim () {
-    [[ "$(cat $reply/cmdline)" =~ "^(/bin/)?vim" ]]
+    [[ $(command_name) = $VIM_EXE ]]
     # ${reply}/exe is frequently impossible to dereference
-    # [ ${reply}/exe(:A) = "/bin/vim" ]
+    # [ ${reply}/exe(:A) = $VIM_EXE ]
 }
 
 # Checks to see if the process is the init process.
