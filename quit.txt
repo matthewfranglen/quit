@@ -14,7 +14,7 @@ command_name () {
     # This actually has a terrible time with the shells started by tmux.
     # When tmux starts my zsh, the command name is -zsh.
     # It seems to be impossible to suppress the error for the inability to expand -zsh using =
-    echo =$(cat $reply/cmdline | strings -1 | head -n1)(:A)
+    echo =${(s/\0/)$(cat $reply/cmdline)[1]}
 }
 
 # Checks to see if the process is the vim process.
@@ -35,7 +35,7 @@ is_init () {
 
 # Look up /proc/[number]/stat in man 5 proc
 get_parent () {
-    reply=/proc/$(cat ${reply}/stat | cut -d' ' -f4)
+    reply=/proc/${(s/ /)$(cat ${reply}/stat)[4]}
 }
 
 # This is the recursive function.
