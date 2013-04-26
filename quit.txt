@@ -46,3 +46,5 @@ get_vim_process () {
     expand_link
     rc_get_vim_process
 }
+
+# vim: set ai et sw=4 syntax=zsh :
